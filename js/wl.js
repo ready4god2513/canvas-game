@@ -3,11 +3,16 @@ var Game = function(context){
   this.score = 0;
   this.speedModifier = 0.1;
   this.context = context;
-  this.monster = {};
+  this.monsters = [];
   this.hero = {};
   this.assets = [];
 
   this.start = function(){
+    this.initializeCharacters();
+    this.initializeListeners();
+  };
+
+  this.initializeCharacters = function(){
     this.hero = new Sprite({
       url: "https://raw.github.com/lostdecade/simple_canvas_game/master/images/hero.png",
       x: 20,
@@ -15,11 +20,11 @@ var Game = function(context){
       speed: 50
     });
 
-    this.monster = new Sprite({
+    this.monsters.push(new Sprite({
       url: "https://raw.github.com/lostdecade/simple_canvas_game/master/images/monster.png",
       x: 70,
       y: 70
-    });
+    }));
 
     this.bg = new Sprite({
       url: "https://raw.github.com/lostdecade/simple_canvas_game/master/images/background.png",
@@ -27,13 +32,11 @@ var Game = function(context){
       y: 0
     });
 
-    this.assets = [
+    this.assets = characters = [
       this.bg,
       this.hero, 
-      this.monster
+      this.monsters
     ];
-
-    this.initializeListeners();
   };
 
   this.initializeListeners = function(){
@@ -90,7 +93,9 @@ var Game = function(context){
   };
 
   this.redraw = function(){
-    this.context.draw(this.assets);
+    var flattened = [];
+    flattened = flattened.concat.apply(flattened, this.assets);
+    this.context.draw(flattened);
   };
 
   return this;
