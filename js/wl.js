@@ -1,7 +1,7 @@
 var Game = function(context){
 
   this.score = 0;
-  this.speedModifier = 0.1;
+  this.speedModifier = 1;
   this.context = context;
   this.monsters = [];
   this.hero = {};
@@ -10,6 +10,7 @@ var Game = function(context){
   this.start = function(){
     this.initializeCharacters();
     this.initializeListeners();
+    this.redraw();
   };
 
   this.initializeCharacters = function(){
@@ -61,6 +62,17 @@ var Game = function(context){
     });
   };
 
+  this.displayScore = function(){
+    this.context.context.fillStyle = "rgb(250, 250, 250)";
+    this.context.context.font = "14px Helvetica";
+    this.context.context.textAlign = "left";
+    this.context.context.textBaseAlign = "top";
+    this.context.context.fillText("Goblins Caught: " + this.score, 48, 48);
+  };
+
+  this.setOuterBounds = function(){
+  };
+
   this.changeSpeed = function(newSpeed){
     this.speedModifier = newSpeed;
   };
@@ -93,9 +105,8 @@ var Game = function(context){
   };
 
   this.redraw = function(){
-    var flattened = [];
-    flattened = flattened.concat.apply(flattened, this.assets);
-    this.context.draw(flattened);
+    this.context.drawSprites([].concat.apply([], this.assets));
+    this.displayScore();
   };
 
   return this;
@@ -137,10 +148,12 @@ var Canvas = function(){
 
   this.context = this.container.getContext("2d");
 
-  this.draw = function(elems){
+  this.drawSprites = function(elems){
     for(var i = 0; i < elems.length; i++){
       sprite = elems[i];
-      this.context.drawImage(sprite.img, sprite.x, sprite.y);
+      if(sprite.ready){
+        this.context.drawImage(sprite.img, sprite.x, sprite.y);
+      }
     }
   };
 
